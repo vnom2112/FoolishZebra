@@ -1,9 +1,12 @@
+import parse.ParseDHCP;
+import parse.ParseWebLog;
 
 public class FoolishZebra {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		ParseDHCP.parseFile("../testDHCP.txt");
+		ParseWebLog.parseWebLog("../testWebLog.txt");
 	}
 
 }
