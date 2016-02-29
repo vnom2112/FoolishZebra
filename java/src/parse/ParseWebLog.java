@@ -1,13 +1,15 @@
 package parse;
 
 import java.io.*;
+import java.sql.SQLException;
 
 public class ParseWebLog {
   
 	public static void parseWebLog(String fileName) {
 	    File file = new File(fileName);
+	    BufferedReader reader = null;
 	    try {
-	      BufferedReader reader = new BufferedReader(new FileReader(file));
+	      reader = new BufferedReader(new FileReader(file));
 	      String line = "";
 	
 	      while ((line = reader.readLine()) != null) {
@@ -28,6 +30,14 @@ public class ParseWebLog {
 	      }
 	    } catch (IOException e) {
 	      e.printStackTrace();
-	    }
+	    } finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
