@@ -60,7 +60,7 @@ public class ParseDHCP {
 					if(i % batchSize == 0) { 
 						ps.executeBatch(); 
 						System.out.print("\r"); 
-						System.out.print(i + " rows inserted.");
+						System.out.print(i + " dhcp logs inserted.");
 					}
 				}
 			}
@@ -68,7 +68,7 @@ public class ParseDHCP {
 			
 			long totalTime = System.currentTimeMillis() - startTime;
 			float seconds = totalTime / ((float)1000);
-			System.out.println("\nFinished inserting " + i + " rows in " + seconds + " seconds.");
+			System.out.println("\nDHCP: Finished inserting " + i + " rows in " + seconds + " seconds.\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
