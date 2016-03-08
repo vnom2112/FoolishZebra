@@ -12,7 +12,7 @@ public class DBAccess {
 	  host text,
 	  ip character(20),
 	  mac character(12)
-	)
+	);
 	
 	CREATE TABLE weblog
 	(
@@ -28,13 +28,13 @@ public class DBAccess {
 	  responsesize text,
 	  requesttype text,
 	  requesturl text
-	)
+	);
 	
 	CREATE TABLE studentid (
 		id TEXT,
 		mac CHARACTER(12),
 		wmac CHARACTER(12)
-	)
+	);
 	
  **/
 	

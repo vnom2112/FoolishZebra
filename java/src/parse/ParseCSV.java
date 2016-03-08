@@ -4,6 +4,7 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import db.DBAccess;
 
@@ -18,11 +19,12 @@ public class ParseCSV {
 	    try {
 	      reader = new BufferedReader(new FileReader(file));
 	      conn = DBAccess.getConnection();
+	      conn.setAutoCommit(false);
 	      PreparedStatement ps = conn.prepareStatement(
     				"INSERT INTO studentid VALUES(?, ?, ?)"
 	    		  );
 	      String line = "";
-	      int batchSize = 200;
+	      int batchSize = 50;
 		  int i = 0;
 	
 	      while ((line = reader.readLine()) != null) {
@@ -51,6 +53,10 @@ public class ParseCSV {
 	      }
 	      ps.executeBatch();
 	      
+	      Statement stmt = conn.createStatement();
+	      stmt.execute("CREATE INDEX idx_mac_address ON studentid(mac)");
+	      stmt.execute("CREATE INDEX idx_wmac_address ON studentid(wmac)");
+	      conn.commit();
 	      long totalTime = System.currentTimeMillis() - startTime;
 		  float seconds = totalTime / ((float)1000);
 		  System.out.println("\nStudent IDs: Finished inserting " + i + " rows in " + seconds + " seconds.\n");

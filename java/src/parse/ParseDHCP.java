@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,8 @@ public class ParseDHCP {
 			Pattern pattern = Pattern.compile("Host=([^\\s]*) IP=([^\\s]*) MAC=([^\\s]*)");
 			
 			conn = DBAccess.getConnection();
-			int batchSize = 200;
+			conn.setAutoCommit(false);
+			int batchSize = 50;
 			int i = 0;
 			PreparedStatement ps = conn.prepareStatement(
 					"INSERT INTO dhcp \n"
@@ -65,8 +67,13 @@ public class ParseDHCP {
 				}
 			}
 			ps.executeBatch();
-			
-			long totalTime = System.currentTimeMillis() - startTime;
+			Statement stmt = conn.createStatement();
+			conn.commit();
+			System.out.println("Adding indexes to dhcp table...");
+		    stmt.execute("CREATE INDEX idx_dhcp_time on dhcp (ip, leasetime DESC)");
+		    stmt.execute("ANALYZE");
+			conn.commit();
+		    long totalTime = System.currentTimeMillis() - startTime;
 			float seconds = totalTime / ((float)1000);
 			System.out.println("\nDHCP: Finished inserting " + i + " rows in " + seconds + " seconds.\n");
 		} catch (FileNotFoundException e) {
@@ -74,7 +81,6 @@ public class ParseDHCP {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
